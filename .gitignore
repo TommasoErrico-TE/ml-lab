@@ -1,3 +1,45 @@
+# ============================================================
+# Project-specific ignores (TP53 ML project)
+# ============================================================
+
+# macOS / Windows system files
+.DS_Store
+Thumbs.db
+
+# Large DepMap raw data (downloaded from DepMap portal, not versioned)
+# To re-download: see README or run scripts/download_depmap.py
+data/*.csv
+data/*.tsv
+data/*.parquet
+data/*.h5
+data/*.h5ad
+data/raw/
+# (if there are small files we want to keep, whitelist them with !)
+
+# Generated outputs (can be rebuilt by running the pipeline)
+output_tp53/
+results/
+figures/
+
+# Model artifacts
+models/
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.onnx
+
+# Experiment tracking
+wandb/
+mlruns/
+lightning_logs/
+logs/
+tb_logs/
+
+# ============================================================
+# Standard Python ignores
+# ============================================================
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
