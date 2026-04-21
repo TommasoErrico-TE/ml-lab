@@ -68,6 +68,11 @@ expr = pd.read_csv(EXPR_FILE)
 mut = pd.read_csv(MUT_FILE)
 model = pd.read_csv(MODEL_FILE)
 
+# Drop index columns senza nome (es. "Unnamed: 0") che pandas crea quando
+# il CSV ha una prima colonna di indice numerico. Altrimenti finisce come feature.
+expr = expr.loc[:, ~expr.columns.str.startswith("Unnamed")]
+mut = mut.loc[:, ~mut.columns.str.startswith("Unnamed")]
+
 print(f"Expression shape: {expr.shape}")
 print(f"Mutation shape:   {mut.shape}")
 print(f"Model shape:      {model.shape}")
