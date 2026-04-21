@@ -1,0 +1,21 @@
+# Core data stack
+pandas>=2.0
+numpy>=1.24
+
+# ML classico
+scikit-learn>=1.3
+xgboost>=2.0
+
+# Deep learning (per i prossimi step, MLP, autoencoder)
+torch>=2.0
+
+# Interpretabilita'
+shap>=0.44
+
+# Visualizzazione
+matplotlib>=3.7
+seaborn>=0.13
+
+# Notebook
+jupyter>=1.0
+ipykernel>=6.25
