@@ -152,51 +152,22 @@ def main():
     print(f"Test shape:  {X_test.shape}")
 
     # =====================================================
-    # MODELS
+    # MODELS — usa best HP dalla search se disponibili
     # =====================================================
+    from _best_hp import load_best_hp, make_tuned_logreg, make_tuned_rf, make_tuned_xgb
+    best_hp = load_best_hp(Path("output_tp53/task1/hp_search_best.csv"))
+    if best_hp:
+        print(f"\nBest HP caricati dalla search: {list(best_hp.keys())}")
+    else:
+        print("\nHP search non trovata, uso HP di default")
+
     models = {}
-
-    # 1) Logistic Regression
-    models["Logistic Regression"] = Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler()),
-        ("clf", LogisticRegression(
-            max_iter=2000,
-            random_state=RANDOM_STATE,
-            class_weight="balanced"
-        ))
-    ])
-
-    # 2) Random Forest
-    models["Random Forest"] = Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("clf", RandomForestClassifier(
-            n_estimators=300,
-            max_depth=None,
-            min_samples_split=2,
-            min_samples_leaf=1,
-            random_state=RANDOM_STATE,
-            n_jobs=-1,
-            class_weight="balanced"
-        ))
-    ])
-
-    # 3) XGBoost
+    models["Logistic Regression"] = make_tuned_logreg(best_hp, random_state=RANDOM_STATE)
+    models["Random Forest"] = make_tuned_rf(best_hp, random_state=RANDOM_STATE)
     if XGBOOST_AVAILABLE:
-        models["XGBoost"] = Pipeline([
-            ("imputer", SimpleImputer(strategy="median")),
-            ("clf", XGBClassifier(
-                n_estimators=300,
-                max_depth=6,
-                learning_rate=0.05,
-                subsample=0.8,
-                colsample_bytree=0.8,
-                objective="binary:logistic",
-                eval_metric="logloss",
-                random_state=RANDOM_STATE,
-                n_jobs=-1
-            ))
-        ])
+        xgb_pipe = make_tuned_xgb(best_hp, random_state=RANDOM_STATE)
+        if xgb_pipe is not None:
+            models["XGBoost"] = xgb_pipe
     else:
         print("\n[INFO] XGBoost non installato. Lo salto.")
         print("Per installarlo: pip install xgboost")

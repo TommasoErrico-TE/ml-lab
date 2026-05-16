@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=tp53_mlp
-#SBATCH --partition=long_gpu
+#SBATCH --partition=medium_gpuh200
 #SBATCH --qos=normal
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=24G

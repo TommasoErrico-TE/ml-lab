@@ -103,15 +103,14 @@ def tissue_summary(df):
 
 
 def build_pipeline():
-    return Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler()),
-        ("clf", LogisticRegression(
-            max_iter=2000,
-            random_state=RANDOM_STATE,
-            class_weight="balanced",
-        )),
-    ])
+    """Usa il LogReg tunato dalla HP search se disponibile, altrimenti default."""
+    from _best_hp import load_best_hp, make_tuned_logreg
+    best_hp = load_best_hp(OUTPUT_DIR / "task1/hp_search_best.csv")
+    if "LogReg" in best_hp:
+        print(f"  [build_pipeline] usando best LogReg HP: {best_hp['LogReg']}")
+    else:
+        print("  [build_pipeline] HP search non trovata, uso LogReg di default")
+    return make_tuned_logreg(best_hp, random_state=RANDOM_STATE)
 
 
 def fmt_aucs(aucs):

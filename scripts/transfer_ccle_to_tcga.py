@@ -80,31 +80,21 @@ def load_aligned():
 
 
 def make_models():
+    """Usa i best HP dalla CCLE HP search se disponibili."""
+    from _best_hp import load_best_hp, make_tuned_logreg, make_tuned_rf, make_tuned_xgb
+    best_hp = load_best_hp(Path("output_tp53/task1/hp_search_best.csv"))
+    if best_hp:
+        print(f"  Using best CCLE HP from search: {list(best_hp.keys())}")
+    else:
+        print("  HP search not found, using default HPs")
+
     models = {}
-    models["LogReg"] = Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler()),
-        ("clf", LogisticRegression(
-            max_iter=3000, random_state=RANDOM_STATE, class_weight="balanced",
-        )),
-    ])
-    models["RandomForest"] = Pipeline([
-        ("imputer", SimpleImputer(strategy="median")),
-        ("clf", RandomForestClassifier(
-            n_estimators=300, random_state=RANDOM_STATE,
-            n_jobs=-1, class_weight="balanced",
-        )),
-    ])
+    models["LogReg"] = make_tuned_logreg(best_hp, random_state=RANDOM_STATE)
+    models["RandomForest"] = make_tuned_rf(best_hp, random_state=RANDOM_STATE)
     if XGBOOST_AVAILABLE:
-        models["XGBoost"] = Pipeline([
-            ("imputer", SimpleImputer(strategy="median")),
-            ("clf", XGBClassifier(
-                n_estimators=300, max_depth=6, learning_rate=0.05,
-                subsample=0.8, colsample_bytree=0.8,
-                objective="binary:logistic", eval_metric="logloss",
-                random_state=RANDOM_STATE, n_jobs=-1,
-            )),
-        ])
+        xgb_pipe = make_tuned_xgb(best_hp, random_state=RANDOM_STATE)
+        if xgb_pipe is not None:
+            models["XGBoost"] = xgb_pipe
     return models
 
 
