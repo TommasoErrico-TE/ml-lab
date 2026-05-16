@@ -6,15 +6,21 @@
 .DS_Store
 Thumbs.db
 
-# Large DepMap raw data (downloaded from DepMap portal, not versioned)
-# To re-download: see README or run scripts/download_depmap.py
+# Large raw data (DepMap CCLE + TCGA Xena, downloaded externally, not versioned)
+# To re-download: see README, data/README.md, scripts/download_tcga.py
 data/*.csv
 data/*.tsv
 data/*.parquet
 data/*.h5
 data/*.h5ad
+data/*.gz
 data/raw/
+data/tcga/
 # (if there are small files we want to keep, whitelist them with !)
+
+# Backup copies del notebook
+*.ipynb.bak
+*.bak
 
 # Generated outputs (can be rebuilt by running the pipeline)
 output_tp53/

@@ -28,7 +28,7 @@ warnings.filterwarnings("ignore")
 
 OUTPUT_DIR = Path("output_tp53")
 RANDOM_STATE = 42
-DEVICE = torch.device("cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 NON_FEATURES = {
     "Unnamed: 0",

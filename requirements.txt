@@ -1,6 +1,7 @@
 # Core data stack
 pandas>=2.0
 numpy>=1.24
+pyarrow>=14.0          # parquet engine per TCGA master
 
 # ML classico
 scikit-learn>=1.3
